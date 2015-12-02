@@ -211,6 +211,7 @@ function pprocess(str) {
     
     lasti = endi;
   }
+  out += str.substring(lasti, str.length);
   return out;
 }
 function compile(str) {
