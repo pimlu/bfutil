@@ -141,6 +141,13 @@ function cop(state, a, b) {
   var tmp = 'coptmp';
   return '{0}[-]{1}[{0}+{2}+{1}-]{2}[{1}+{2}-]'.format(a, b, tmp);
 }
+function setn(state, a, n) {
+  //TODO more compact
+  return ('{0}[-]'+Array(1+ +n).join('+')).format(a);
+}
+function setc(state, a, c) {
+  return setn(state, a, c.charCodeAt());
+}
 function whi(state, a) {
   state.ctrl.push(['whi', a]);
   return '{0}['.format(a);
@@ -179,6 +186,8 @@ function end(state) {
 var ms = namefuck.ms = {
   mov: mov,
   cop: cop,
+  setn: setn,
+  setc: setc,
   whi: whi,
   if: mif,
   else: melse,
@@ -195,11 +204,11 @@ function pprocess(str) {
   var comments = /;[^\n]*(?:\n|$)/g;
   str = str.replace(comments, '');
   
-  var reg = /@([a-z]*)(?:\(([a-z,]*)\))?/g;
+  var reg = /@([a-z]*)(?:\(([^)]*)\))?/g;
   var match;
   var lasti = 0;
   var out = '';
-  while ((match = reg.exec(str)) !== null) {
+  while((match = reg.exec(str)) !== null) {
     var name = match[1];
     var args = (match[2]||'').split(',');
     var l = match[0].length
