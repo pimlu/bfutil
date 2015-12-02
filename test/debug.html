@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title>nf debug</title>
+  <script src='../dist/namefuck.js'></script>
+  <script>
+  var elem = document.getElementById.bind(document);
+  
+  window.onload = function() {
+    elem('parse').onclick = function() {
+      elem('out').innerHTML = namefuck.compile(elem('input').value);
+    };
+  };
+  </script>
+  <style>
+    textarea {
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="input" rows="10" cols="50"></textarea>
+  <br/>
+  <button id="parse">parse</button>
+  <pre id="out"></pre>
+</body>
+</html>
