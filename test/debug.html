@@ -7,20 +7,63 @@
   
   window.onload = function() {
     elem('parse').onclick = function() {
-      elem('out').innerHTML = namefuck.compile(elem('input').value);
+      var out = elem('out');
+      var link = elem('link');
+      try {
+        var result = out.innerHTML = namefuck.compile(elem('input').value);
+        out.style.color = 'black';
+        link.href = 'https://fatiherikli.github.io/brainfuck-visualizer/#'+btoa(result);
+        link.style.display='inline';
+      } catch(e) {
+        link.style.display='none';
+        out.innerHTML = e.stack;
+        out.style.color = 'red';
+      }
     };
   };
   </script>
   <style>
+    body { 
+      font-family: sans-serif;
+    }
+    a {
+      text-decoration: none;
+      font-size: 0.8em;
+      margin-left: 20px;
+    }
     textarea {
       font-family: monospace;
+      width: 600px;
+      height: 350px;
     }
   </style>
 </head>
 <body>
-  <textarea id="input" rows="10" cols="50"></textarea>
+  <textarea id="input" rows="10" cols="50">;initialize variables
+@setn(i, 26)
+@setc(letter, a)
+@setc(LETTER, A)
+@setn(even, 1)
+
+;while we have letters to print
+@whi(i)
+  ;print lower case if even, else upper
+  @if(even)
+    even-
+    letter.
+  @else
+    even+
+    LETTER.
+  @end
+
+  ;increment our chars, decrement number of letters left
+  letter+
+  LETTER+
+  i-
+@end</textarea>
   <br/>
   <button id="parse">parse</button>
+  <a id="link" style="display:none;">run this script online</a>
   <pre id="out"></pre>
 </body>
 </html>

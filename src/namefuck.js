@@ -146,6 +146,7 @@ function setn(state, a, n) {
   return ('{0}[-]'+Array(1+ +n).join('+')).format(a);
 }
 function setc(state, a, c) {
+  if(/^'.'$/.test(c)) c = c[1];
   return setn(state, a, c.charCodeAt());
 }
 function whi(state, a) {
@@ -189,8 +190,8 @@ var ms = namefuck.ms = {
   setn: setn,
   setc: setc,
   whi: whi,
-  if: mif,
-  else: melse,
+  'if': mif,
+  'else': melse,
   end: end
 };
 
@@ -210,12 +211,17 @@ function pprocess(str) {
   var out = '';
   while((match = reg.exec(str)) !== null) {
     var name = match[1];
-    var args = (match[2]||'').split(',');
+    var args = match[2] ? match[2].split(',').map(Function.call, ''.trim) : [];
     var l = match[0].length
     var endi = reg.lastIndex;
     
     out += str.substring(lasti, endi-l);
     args.splice(0, 0, state);
+    if(!ms[name]) throw new Error('unknown command @'+name+
+      '.\n options are: '+Object.keys(ms).
+      map(function(s){return '@'+s}).join(', '));
+    if(ms[name].length !== args.length) throw new Error('@'+name+' needs '+
+      (ms[name].length-1)+' arguments (received '+(args.length-1)+')');
     out += ms[name].apply(null, args);
     
     lasti = endi;
